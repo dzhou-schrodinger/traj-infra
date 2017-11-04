@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="last update 11.04.2017">
+  
+  <link rel="shortcut icon" href="./img/favicon.ico">
+  <title>Home - trajectory analysis</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> trajectory analysis</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href=".">Home</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#module-changes">module changes</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#existing-analyzers-in-the-new-trajectory-infrastructure">existing analyzers in the new trajectory infrastructure</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="fundermentals/">Fundermentals</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="paradigms/">Paradigms</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">trajectory analysis</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="module-changes">module changes</h2>
+<p>The modules to be deprecated are
+<div class="highlight"><pre><span></span><span class="n">schrodinger</span><span class="o">.</span><span class="n">trajectory</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">infra</span><span class="o">.</span><span class="n">desmond</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">destro</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">periodicfix</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">framesettools</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">generictrajectory</span>
+</pre></div>
+</p>
+<p>The replacements are
+<div class="highlight"><pre><span></span><span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">topo</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">traj</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">analysis</span>
+<span class="p">(</span><span class="n">the</span> <span class="n">new</span> <span class="n">destro</span><span class="p">)</span>
+</pre></div>
+</p>
+<h2 id="existing-analyzers-in-the-new-trajectory-infrastructure">existing analyzers in the new trajectory infrastructure</h2>
+<ul>
+<li>basic geometric operations<ul>
+<li><code>Angle</code></li>
+<li><code>Distance</code></li>
+<li><code>Torsion</code></li>
+<li><code>Vector</code></li>
+</ul>
+</li>
+<li><code>CenterOf</code><ul>
+<li><code>Centroid</code></li>
+<li><code>CoC</code>: center of charge</li>
+<li><code>Com</code>: center of mass</li>
+</ul>
+</li>
+<li><code>Dipole</code></li>
+<li><code>Gyradius</code>: radius of gyration</li>
+<li><code>HydrogenBondFinder</code></li>
+<li><code>MassAvgVel</code>: mass-averaged velocity</li>
+<li><code>MolecularSurfaceArea</code></li>
+<li><code>MomentOfInertia</code></li>
+<li><code>OrderParameter</code><ul>
+<li>the following analyzers are inputs to <code>OrderParameter</code><ul>
+<li><code>AxisDirector</code></li>
+<li><code>DipoleDirector</code></li>
+<li><code>LipidDirector</code><ul>
+<li>sn1</li>
+<li>sn2</li>
+<li>all</li>
+</ul>
+</li>
+<li><code>MomentOfInertiaDirector</code></li>
+<li><code>SmartsDirector</code></li>
+<li><code>SystemDipoleDirector</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>PolarSurfaceArea</code></li>
+<li><code>PosAlign</code>: align positions<ul>
+<li><code>RMSD</code>: Root mean square deviation<ul>
+<li><code>LigandRMSD</code>: further includes symmetry consideration</li>
+</ul>
+</li>
+<li><code>RMSF</code>: Root mean square fluctuation<ul>
+<li><code>ProteinRMSF</code></li>
+</ul>
+</li>
+<li><del><code>CovarianceMatrix</code></del></li>
+</ul>
+</li>
+<li><code>PosTrack</code>: track positions of selected atoms in a trajectory</li>
+<li><code>ProtLigInter</code>: Protein-ligand interactions<ul>
+<li><code>HydrophobicInter</code>, `_HydrophobicInter</li>
+<li><code>MetalInter</code></li>
+<li><code>ProtLigHbondInter</code></li>
+<li><code>ProtLigPiInter</code></li>
+<li><code>ProtLigPolarInter</code>, <code>_ProtLigPolarInter</code></li>
+<li><code>WaterBridges</code></li>
+<li><code>WatLigFragDistance</code>, <code>_WatLigFragDistance</code></li>
+</ul>
+</li>
+<li><code>ProtProtInter</code>: Protein-protein interactions<ul>
+<li><code>ProtProtHbondInter</code></li>
+<li><code>ProtProtPiInter</code></li>
+<li><code>ProtProtSaltBridges</code></li>
+</ul>
+</li>
+<li><code>Rdf</code>: Radial distribution function</li>
+<li><code>Ramachandran</code></li>
+<li><code>SecondaryStructure</code></li>
+<li><code>SaltBridgeFinder</code></li>
+<li><code>SolventAccessibleSurfaceArea</code></li>
+<li><code>SolventAccessibleSurfaceAreaByResidue</code></li>
+<li><code>VolumeMapper</code></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fundermentals/" class="btn btn-neutral float-right" title="Fundermentals">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="fundermentals/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="./js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.16.1
+Build Date UTC : 2017-11-04 18:22:21
+-->

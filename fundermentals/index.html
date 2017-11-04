@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Fundermentals - trajectory analysis</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Fundermentals";
+    var mkdocs_page_input_path = "fundermentals.md";
+    var mkdocs_page_url = "/fundermentals/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> trajectory analysis</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Fundermentals</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#minimum-examples">minimum examples</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#atom-aids-and-atom-gids">atom AIDs and atom GIDs</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../paradigms/">Paradigms</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">trajectory analysis</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Fundermentals</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>The new trajectory infrastructure will do better with handling</p>
+<ul>
+<li>virtual sites (pseudo atoms)</li>
+<li>triclinic lattice</li>
+<li>unwrapping around periodic boundary condition automatically</li>
+</ul>
+<p>Roughly speaking, here are the correspondences:</p>
+<table>
+<thead>
+<tr>
+<th>old</th>
+<th>new</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DesmondSimulation</code> or <code>ChorusSimulation</code> object</td>
+<td><code>Cms</code> object and trajectory object</td>
+</tr>
+<tr>
+<td><code>_DesmondFrame</code> object</td>
+<td><code>traj.Frame</code> object</td>
+</tr>
+<tr>
+<td><code>schrodinger.infra.desmond.Trajectory</code> or <code>framesettools.Frameset</code></td>
+<td>python list of <code>traj.Frame</code> objects</td>
+</tr>
+</tbody>
+</table>
+<p>Note that </p>
+<ul>
+<li>The new frame object is different from the old one. </li>
+</ul>
+<h2 id="minimum-examples">minimum examples</h2>
+<p>To read the cms input file
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+
+<span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">cms_file_name</span><span class="p">)</span>
+</pre></div>
+</p>
+<p>To read a trajectory
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
+
+<span class="n">tr</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">trajectory_directory</span><span class="p">)</span>
+</pre></div>
+</p>
+<p>To do some analysis using existing analyzers</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">schrodinger.application.desmond.packages</span> <span class="kn">import</span> <span class="n">analysis</span><span class="p">,</span> <span class="n">traj</span><span class="p">,</span> <span class="n">topo</span>
+
+<span class="c1"># load data</span>
+<span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">FNAME</span><span class="p">)</span>
+<span class="n">tr</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">TRJ_FNAME</span><span class="p">)</span>
+
+<span class="c1"># define analyzers</span>
+<span class="n">analyzer1</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">Com</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="n">asl</span><span class="o">=</span><span class="s1">&#39;m.n 1&#39;</span><span class="p">)</span>
+<span class="n">analyzer2</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">ProtLigInter</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="s1">&#39;protein&#39;</span><span class="p">,</span> <span class="s1">&#39;m.n 2&#39;</span><span class="p">)</span>
+
+<span class="c1"># compute result</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">analyzer1</span><span class="p">,</span> <span class="n">analyzer2</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+
+
+<p>The <code>results</code> is a list of the analyzer's output.
+Each output is a list of results for each trajectory frame.</p>
+<h2 id="atom-aids-and-atom-gids">atom AIDs and atom GIDs</h2>
+<p>In MD simulation, there are two types of atoms</p>
+<ul>
+<li>physical atoms</li>
+<li>pseudo atoms (virtual sites): They are used to model forcefield better.</li>
+</ul>
+<p>In Maestro, the pseudo atoms are not displayed.</p>
+<p>To keep track of the atoms, there are two types of IDs</p>
+<ul>
+<li>AID stands for Atom ID, defined as the atom index in the full system ct (it is the same as <code>cms_model.atom.index</code>).</li>
+<li>GID stands for Global ID, defined as the particle index in the Desmond internal particle array.</li>
+</ul>
+<p>Note that pseudo atoms do not have AID.</p>
+<p>To access a particle's coordinate in the trajectory (i.e., the <code>traj.Frame</code> object), you have to use GID. We have functions to map AID to GID in the <code>topo</code> module. For example,</p>
+<p><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+<span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">cms_filename</span><span class="p">)</span>
+<span class="n">protein_aids</span> <span class="o">=</span> <span class="n">cms_model</span><span class="o">.</span><span class="n">select_atom</span><span class="p">(</span><span class="n">protein_asl</span><span class="p">)</span>
+<span class="n">protein_gids</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">aids2gids</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">protein_aids</span><span class="p">,</span>
+                              <span class="n">include_pseudoatoms</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">tr</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">trajectory_directory</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
+    <span class="n">fr</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="n">protein_gids</span><span class="p">)</span>
+    <span class="n">fr</span><span class="o">.</span><span class="n">vel</span><span class="p">(</span><span class="n">protein_gids</span><span class="p">)</span>
+</pre></div>
+
+Both <code>traj.Frame.pos()</code> and <code>traj.Frame.vel()</code> return Nx3 numpy arrays. Without argument input, they return the positions or velocities of all atoms.</p>
+<p>Note that</p>
+<ul>
+<li><code>vel()</code> may not exist. Default MD simulation does not save velocities, also the XTC format trajectories do not contain velocities.</li>
+<li>If you get positions this way, then you need to worry about unwrapping around PBC yourself. If you don't want to unwrap yourself, try use the existing mechanisms in the infrastructure. See paradigms below.</li>
+</ul>
+<p>ASL and SMARTS evaluations only return AIDs. In other words, they only select physical atoms.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../paradigms/" class="btn btn-neutral float-right" title="Paradigms">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../paradigms/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+
+</body>
+</html>
