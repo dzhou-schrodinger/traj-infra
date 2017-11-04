@@ -118,40 +118,53 @@
             <div class="section">
               
                 <h2 id="access-structure">access structure</h2>
-<table>
-<thead>
-<tr>
-<th>old</th>
-<th>new</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><pre>import schrodinger.trajectory.cmsstructure as cmsstructure<br>import schrodinger.structutils.analyze as analyze<br><br>cms_st = cmsstructure.read_cms(model_fname)<br>for a in cms_st.atom:<br>    print(a.index)<br>ligand_aids = analyze.evaluate_asl(cms_st, ligand_asl) </pre></td>
-<td><pre>import schrodinger.application.desmond.packages.topo as topo<br><br>_, cms_model = topo.read_cms(model_fname)<br>for a in cms_model.atom:<br>    print(a.index)<br>ligand_aids = cms_model.select_atom(ligand_asl)</pre></td>
-</tr>
-</tbody>
-</table>
+<p>old
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.trajectory.cmsstructure</span> <span class="kn">as</span> <span class="nn">cmsstructure</span>
+<span class="kn">import</span> <span class="nn">schrodinger.structutils.analyze</span> <span class="kn">as</span> <span class="nn">analyze</span>
+
+<span class="n">cms_st</span> <span class="o">=</span> <span class="n">cmsstructure</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">model_fname</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cms_st</span><span class="o">.</span><span class="n">atom</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">ligand_aids</span> <span class="o">=</span> <span class="n">analyze</span><span class="o">.</span><span class="n">evaluate_asl</span><span class="p">(</span><span class="n">cms_st</span><span class="p">,</span> <span class="n">ligand_asl</span><span class="p">)</span>
+</pre></div>
+
+new
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">model_fname</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cms_model</span><span class="o">.</span><span class="n">atom</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">ligand_aids</span> <span class="o">=</span> <span class="n">cms_model</span><span class="o">.</span><span class="n">select_atom</span><span class="p">(</span><span class="n">ligand_asl</span><span class="p">)</span>
+</pre></div>
+</p>
 <h2 id="access-trajectory">access trajectory</h2>
-<table>
-<thead>
-<tr>
-<th>old</th>
-<th>new</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><pre>from schrodinger.trajectory.desmondsimulation import ChorusSimulation<br><br>csim = ChorusSimulation(cms_filename, trajectory_directory)<br>for frame_index in xrange(csim.total_frame):<br>    fr = csim.getFrame(frame_index)<br>    st = fr.getStructure()</pre></td>
-<td><pre>import schrodinger.application.desmond.packages.traj as traj<br>import schrodinger.application.desmond.packages.topo as topo<br><br>_, cms_model = topo.read_cms(model_fname)<br>tr = traj.read_traj(trajectory_directory)<br>for fr in tr:<br>    st = topo.update_fsys_ct(cms_model, fr).fsys_ct<br>    # you can use st = topo.update_fsys_ct(cms_model, fr) as well<br>    # the properties of cms_model and its fsys_ct are in sync  </pre></td>
-</tr>
-<tr>
-<td><pre>from schrodinger.infra import desmond<br><br>tr = desmond.generic_trajectory(TRJ_FILE)<br>dt = tr.frame_time(1) - tr.frame_time(0)</pre></td>
-<td><pre>import schrodinger.application.desmond.packages.traj as traj<br><br>tr = traj.read_traj(trajectory_directory)<br>dt = tr[1].time - tr[0].time</pre></td>
-</tr>
-</tbody>
-</table>
-<p>Note that </p>
+<p>old
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">schrodinger.trajectory.desmondsimulation</span> <span class="kn">import</span> <span class="n">ChorusSimulation</span>
+<span class="kn">from</span> <span class="nn">schrodinger.infra</span> <span class="kn">import</span> <span class="n">desmond</span>
+
+<span class="n">tr</span> <span class="o">=</span> <span class="n">desmond</span><span class="o">.</span><span class="n">generic_trajectory</span><span class="p">(</span><span class="n">trajectory_directory</span><span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">frame_time</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">tr</span><span class="o">.</span><span class="n">frame_time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">csim</span> <span class="o">=</span> <span class="n">ChorusSimulation</span><span class="p">(</span><span class="n">cms_filename</span><span class="p">,</span> <span class="n">trajectory_directory</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">frame_index</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">csim</span><span class="o">.</span><span class="n">total_frame</span><span class="p">):</span>
+    <span class="n">fr</span> <span class="o">=</span> <span class="n">csim</span><span class="o">.</span><span class="n">getFrame</span><span class="p">(</span><span class="n">frame_index</span><span class="p">)</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">fr</span><span class="o">.</span><span class="n">getStructure</span><span class="p">()</span><span class="o">&lt;/</span><span class="n">pre</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;</span>
+</pre></div>
+</p>
+<p>new
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
+<span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">model_fname</span><span class="p">)</span>
+<span class="n">tr</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">trajectory_directory</span><span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">tr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="o">-</span> <span class="n">tr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+<span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">update_fsys_ct</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span><span class="o">.</span><span class="n">fsys_ct</span>
+    <span class="c1"># you can use st = topo.update_fsys_ct(cms_model, fr) as well</span>
+    <span class="c1"># the properties of cms_model and its fsys_ct are in sync</span>
+</pre></div>
+
+Note that</p>
 <ul>
 <li>although there is a correspondence of <code>st = fr.getStructure()</code>, it is likely not the way to go. See <a href="../paradigms/#extract-structure-once-and-per-frame-update-coordinates-instead-of-per-frame-update-full-system-ct-and-extract-structure">this paradigm</a>.</li>
 <li>there are two ways to update the <code>cms_model</code>
