@@ -60,6 +60,9 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#introduction">introduction</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#minimum-examples">minimum examples</a></li>
                 
             
@@ -117,7 +120,8 @@
           <div role="main">
             <div class="section">
               
-                <p>The new trajectory infrastructure will do better with handling</p>
+                <h2 id="introduction">introduction</h2>
+<p>The new trajectory infrastructure will do better with handling</p>
 <ul>
 <li>virtual sites (pseudo atoms)</li>
 <li>triclinic lattice</li>
@@ -146,9 +150,9 @@
 </tr>
 </tbody>
 </table>
-<p>Note that </p>
+<p>Note that</p>
 <ul>
-<li>The new frame object is different from the old one. </li>
+<li>The new frame object is different from the old one.</li>
 </ul>
 <h2 id="minimum-examples">minimum examples</h2>
 <p>To read the cms input file
@@ -179,8 +183,10 @@
 </pre></div>
 
 
-<p>The <code>results</code> is a list of the analyzer's output.
-Each output is a list of results for each trajectory frame.</p>
+<p>The <code>results</code> is a list of the analyzers' output.
+In the above example, <code>results</code> is a list of 2 items, corresponding to the output of the two analyzers.</p>
+<p>The analyzers' output format varies.
+Typically, the output is a list of frame-wise results.</p>
 <h2 id="atom-aids-and-atom-gids">atom AIDs and atom GIDs</h2>
 <p>In MD simulation, there are two types of atoms</p>
 <ul>
