@@ -127,19 +127,24 @@
             <div class="section">
               
                 <h2 id="load-both-cms-file-and-trajectory">load both cms file and trajectory</h2>
-<div class="highlight"><pre><span></span>    <span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cms_file</span><span class="p">)</span>
-    <span class="n">trj_path</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">find_traj_path</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cms_file</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">trj_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Could not locate a trajectory directory for given CMS file&#39;</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">trj</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">trj_path</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot load trajectory file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+<span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
+
+<span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cms_file</span><span class="p">)</span>
+<span class="n">trj_path</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">find_traj_path</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cms_file</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">trj_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Could not locate a trajectory directory for given CMS file&#39;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">trj</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">trj_path</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot load trajectory file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
 </pre></div>
 
 
 <h2 id="extract-structure-once-and-per-frame-update-coordinates-instead-of-per-frame-update-full-system-ct-and-extract-structure">extract structure once and per frame update coordinates instead of per frame update full system ct and extract structure</h2>
-<p>Note that although one can get the full system ct per frame in new trajectory infrastructure, it is likely the inefficient approach. In most cases, the demand is not to track the full system ct over the frames, but track some specific group of atoms or molecules over the frames. In these situations, it is more efficient to </p>
+<p>Note that although one can get the full system ct per frame in new trajectory infrastructure, it is likely the inefficient approach.
+In most cases, the demand is not to track the full system ct over the frames, but track some specific group of atoms or molecules over the frames.
+In these situations, it is more efficient to</p>
 <ul>
 <li>extract the structure once</li>
 <li>keep updating the coordinates of the structure frame by frame</li>
