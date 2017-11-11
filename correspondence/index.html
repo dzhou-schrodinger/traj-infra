@@ -137,6 +137,7 @@ new
 <span class="n">ligand_aids</span> <span class="o">=</span> <span class="n">cms_model</span><span class="o">.</span><span class="n">select_atom</span><span class="p">(</span><span class="n">ligand_asl</span><span class="p">)</span>
 </pre></div>
 </p>
+<p>Note that <code>analyze.evaluate_asl</code> does not respect PBC whereas <code>cms_model.select_atom</code> does.</p>
 <h2 id="access-trajectory">access trajectory</h2>
 <p>old
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">schrodinger.trajectory.desmondsimulation</span> <span class="kn">import</span> <span class="n">ChorusSimulation</span>
@@ -161,7 +162,7 @@ new
 <span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
     <span class="n">st</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">update_fsys_ct</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span><span class="o">.</span><span class="n">fsys_ct</span>
     <span class="c1"># you can use st = topo.update_fsys_ct(cms_model, fr) as well</span>
-    <span class="c1"># the properties of cms_model and its fsys_ct are in sync</span>
+    <span class="c1"># since the properties of cms_model and its fsys_ct are in sync</span>
 </pre></div>
 
 Note that</p>
