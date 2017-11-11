@@ -200,16 +200,21 @@ Typically, the output is a list of frame-wise results.</p>
 <p>In MD simulation, there are two types of atoms</p>
 <ul>
 <li>physical atoms</li>
-<li>pseudo atoms (virtual sites): They are used to model forcefield better.</li>
+<li>pseudo atoms (virtual sites): They have fractional charge and 0 mass. They are used to model forcefield better.</li>
 </ul>
 <p>In Maestro, the pseudo atoms are not displayed.</p>
 <p>To keep track of the atoms, there are two types of IDs</p>
 <ul>
-<li>AID stands for Atom ID, defined as the atom index in the full system ct (it is the same as <code>cms_model.atom.index</code>).</li>
-<li>GID stands for Global ID, defined as the particle index in the Desmond internal particle array.</li>
+<li>AID stands for Atom ID, defined as the atom index in the full system ct (it is the same as <code>cms_model.atom.index</code>). It starts with 1.</li>
+<li>GID stands for Global ID, defined as the particle index in the Desmond internal particle array. It starts with 0.</li>
 </ul>
-<p>Note that pseudo atoms do not have AID.</p>
-<p>To access a particle's coordinate in the trajectory (i.e., the <code>traj.Frame</code> object), you have to use GID. We have functions to map AID to GID in the <code>topo</code> module. For example,</p>
+<p>Note that</p>
+<ul>
+<li>pseudo atoms do not have AID.</li>
+<li>sometimes <code>AID = GID + 1</code>, but it is not always the case</li>
+</ul>
+<p>To access a particle's coordinate in the trajectory (i.e., the <code>traj.Frame</code> object), you have to use GID.
+We have functions to map AID to GID in the <code>topo</code> module. For example,</p>
 <p><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
 <span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
 
