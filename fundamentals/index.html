@@ -232,7 +232,7 @@ Both <code>traj.Frame.pos()</code> and <code>traj.Frame.vel()</code> return Nx3 
 <p>Note that</p>
 <ul>
 <li><code>vel()</code> may not exist. Default MD simulation does not save velocities, also the XTC format trajectories do not contain velocities.</li>
-<li>If you get positions this way, then you need to worry about unwrapping around PBC yourself. If you don't want to unwrap yourself, try use the existing mechanisms in the infrastructure. See paradigms below.</li>
+<li>If you get positions this way, then you need to worry about unwrapping around PBC yourself. If you don't want to unwrap yourself, try use the existing mechanisms in the infrastructure. See <a href="../paradigms/#try-avoid-unwrap-coordinates-around-periodic-boundary-conditions-yourself">this paradigm</a>.</li>
 </ul>
 <p>ASL and SMARTS evaluations only return AIDs. In other words, they only select physical atoms.</p>
               
