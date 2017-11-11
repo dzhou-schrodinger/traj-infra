@@ -243,7 +243,9 @@ Thus if you are working on a non-desmond repo and uses trajectory stuff, test ha
 <li>use <code>test_marker.require_product('desmond')</code></li>
 <li>lazy import the trajectory handling modules</li>
 </ul>
-<div class="highlight"><pre><span></span><span class="c1"># Lazy import, in case desmond is not installed</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="c1"># Lazy import, in case desmond is not installed</span>
 <span class="n">mf</span> <span class="o">=</span> <span class="bp">None</span>
 
 <span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s1">&#39;module&#39;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
