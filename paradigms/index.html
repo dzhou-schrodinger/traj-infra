@@ -67,7 +67,7 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#load-both-cms-file-and-trajectory">load both cms file and trajectory</a></li>
+                <li class="toctree-l3"><a href="#load-both-cms-file-and-trajectory-in-case-trajectory-path-is-not-specified">load both cms file and trajectory in case trajectory path is not specified</a></li>
                 
             
                 <li class="toctree-l3"><a href="#extract-structure-once-and-per-frame-update-coordinates-instead-of-per-frame-update-full-system-ct-and-extract-structure">extract structure once and per frame update coordinates instead of per frame update full system ct and extract structure</a></li>
@@ -126,7 +126,13 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="load-both-cms-file-and-trajectory">load both cms file and trajectory</h2>
+                <h2 id="load-both-cms-file-and-trajectory-in-case-trajectory-path-is-not-specified">load both cms file and trajectory in case trajectory path is not specified</h2>
+<p>Ideally, the user should specify the paths for both the cms file and the trajectory file.
+In case the trajectory path is missing, one should make sure</p>
+<ol>
+<li>the cms file and trajectory file are in the same directory</li>
+<li>the <code>s_chorus_trajectory_file</code> property in the cms file points to the relative path of the trajectory file</li>
+</ol>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
 <span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
 
@@ -141,6 +147,14 @@
 </pre></div>
 
 
+<p>For GUI, often times one only needs to get the trajectory path from the cms file path, then the following code can be used</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+
+<span class="n">trj_path</span> <span class="o">=</span> <span class="n">find_traj_path_from_cms_path</span><span class="p">(</span><span class="n">cms_path</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Note one should still check whether <code>trj_path</code> is <code>None</code> and do <code>try except</code> for <code>traj.read_traj</code>.</p>
 <h2 id="extract-structure-once-and-per-frame-update-coordinates-instead-of-per-frame-update-full-system-ct-and-extract-structure">extract structure once and per frame update coordinates instead of per frame update full system ct and extract structure</h2>
 <p>Note that although one can get the full system ct per frame in new trajectory infrastructure, it is likely the inefficient approach.
 In most cases, the user does not need to track the full system ct over the frames.
