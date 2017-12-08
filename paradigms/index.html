@@ -155,6 +155,17 @@ In case the trajectory path is missing, one should make sure</p>
 
 
 <p>Note one should still check whether <code>trj_path</code> is <code>None</code> and do <code>try except</code> for <code>traj.read_traj</code>.</p>
+<p>Another useful helper function to load both <code>cms_model</code> and trajectory is <code>read_cms_and_traj</code></p>
+<div class="highlight"><pre><span></span>from schrodinger.application.desmond.packages import traj_util
+
+try:
+    _, cms_model, trj = traj_util.read_cms_and_traj(cmsfile)
+except traj_util.TrajectoryUnreadableError as err:
+    print(err)
+    sys.exit(1)
+</pre></div>
+
+
 <h2 id="extract-structure-once-and-per-frame-update-coordinates-instead-of-per-frame-update-full-system-ct-and-extract-structure">extract structure once and per frame update coordinates instead of per frame update full system ct and extract structure</h2>
 <p>Note that although one can get the full system ct per frame in new trajectory infrastructure, it is likely the inefficient approach.
 In most cases, the user does not need to track the full system ct over the frames.
