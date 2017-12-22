@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="last update 12.07.2017">
+  <meta name="description" content="last update 12.22.2017">
   
   <link rel="shortcut icon" href="./img/favicon.ico">
   <title>Home - traj infra upgrade</title>
@@ -117,7 +117,13 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="module-changes">module changes</h2>
+                <p>Compared to the old trajectory infrastructure, the new one perform better (faster, more robust) in the following aspects</p>
+<ul>
+<li>virtual sites (pseudo atoms)</li>
+<li>triclinic systems and orthorhombic systems whose primitive cell vectors do not align with the axes</li>
+<li>unwrapping around periodic boundary condition automatically</li>
+</ul>
+<h2 id="module-changes">module changes</h2>
 <p>The following modules are deprecated
 <div class="highlight"><pre><span></span><span class="n">schrodinger</span><span class="o">.</span><span class="n">trajectory</span>
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">infra</span><span class="o">.</span><span class="n">desmond</span>
@@ -127,13 +133,20 @@
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">generictrajectory</span>
 </pre></div>
 </p>
-<p>The replacements are
+<p>And the replacements are
 <div class="highlight"><pre><span></span><span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">topo</span>
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">traj</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">traj_util</span>
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">analysis</span>
-<span class="p">(</span><span class="n">the</span> <span class="n">new</span> <span class="n">destro</span><span class="p">)</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">destro</span>
 </pre></div>
 </p>
+<ul>
+<li>topo: <code>Cms</code> object manipulation, GID tracking/conversion</li>
+<li>traj and traj_util: definition of the new <code>Frame</code> object, trajectory read/write</li>
+<li>analysis: definition of various trajectory analyzers (see below)</li>
+<li>destro: the maeff class enables low-level mae file IO (try to avoid using it if you can)</li>
+</ul>
 <h2 id="analyzers-in-the-new-trajectory-infrastructure">analyzers in the new trajectory infrastructure</h2>
 <ul>
 <li>basic geometric operations<ul>
@@ -257,5 +270,5 @@
 
 <!--
 MkDocs version : 0.16.1
-Build Date UTC : 2017-12-08 01:57:40
+Build Date UTC : 2017-12-22 22:35:44
 -->

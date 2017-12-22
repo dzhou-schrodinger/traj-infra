@@ -121,12 +121,6 @@
             <div class="section">
               
                 <h2 id="introduction">introduction</h2>
-<p>The new trajectory infrastructure will do better with handling</p>
-<ul>
-<li>virtual sites (pseudo atoms)</li>
-<li>triclinic lattice</li>
-<li>unwrapping around periodic boundary condition automatically</li>
-</ul>
 <p>Roughly speaking, here are the correspondences:</p>
 <table>
 <thead>
@@ -160,11 +154,11 @@
 <li><code>fr.box</code></li>
 </ul>
 </li>
-<li>If the data is dtr, you may be able to pull out more information</li>
-<li>The function call <code>fr.vel()</code> is not guaranteed. XTC data will not have this, dtr data may not have it either.</li>
+<li>The function call <code>fr.vel()</code> is not guaranteed. XTC data will not have this, DTR data may not have it either.</li>
+<li>If the data is DTR, you may be able to pull out more (private) information such as <code>fr._frame().temperature</code>. Use with your own risk.</li>
 </ul>
 <h2 id="minimum-examples">minimum examples</h2>
-<p>To read the cms input file
+<p>To read the CMS input file
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
 
 <span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">cms_file_name</span><span class="p">)</span>
@@ -228,7 +222,27 @@ We have functions to map AID to GID in the <code>topo</code> module. For example
     <span class="n">fr</span><span class="o">.</span><span class="n">vel</span><span class="p">(</span><span class="n">protein_gids</span><span class="p">)</span>
 </pre></div>
 
-Both <code>traj.Frame.pos()</code> and <code>traj.Frame.vel()</code> return Nx3 numpy arrays. Without argument input, they return the positions or velocities of all atoms.</p>
+Both <code>traj.Frame.pos()</code> and <code>traj.Frame.vel()</code> return Nx3 numpy arrays,
+Without argument input, they return the positions or velocities of all atoms.
+With GIDs input, the order of the output follows the order of the GID input.
+For example </p>
+<div class="highlight"><pre><span></span>In [8]: fr0.pos([2,3])
+Out[8]:
+array([[-4.77608204,  3.04622388,  1.31021202],
+       [-5.66208792,  1.88501239,  0.96774006]], dtype=float32)
+
+In [9]: fr0.pos([3,2])
+Out[9]:
+array([[-5.66208792,  1.88501239,  0.96774006],
+       [-4.77608204,  3.04622388,  1.31021202]], dtype=float32)
+</pre></div>
+
+
+<p>One can use the GID directly to get the single atom coordinate too
+<div class="highlight"><pre><span></span>In [7]: fr0.pos(0)
+Out[7]: array([-0.76461941, -2.64227247, -0.62481445], dtype=float32)
+</pre></div>
+</p>
 <p>Note that</p>
 <ul>
 <li><code>vel()</code> may not exist. Default MD simulation does not save velocities, also the XTC format trajectories do not contain velocities.</li>
