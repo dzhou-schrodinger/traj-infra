@@ -121,7 +121,7 @@
             <div class="section">
               
                 <h2 id="introduction">introduction</h2>
-<p>Roughly speaking, here are the correspondences:</p>
+<p>Roughly speaking, here are the correspondences between the old and new infrastructures:</p>
 <table>
 <thead>
 <tr>
@@ -147,9 +147,10 @@
 <p>Note that</p>
 <ul>
 <li>The new frame object is different from the old one.</li>
+<li>The new trajectory object is simply a python list of <code>traj.Frame</code> objects</li>
 <li>The following properties and function calls are guaranteed for a frame object<ul>
-<li><code>fr.natoms</code></li>
-<li><code>fr.pos()</code></li>
+<li><code>fr.natoms</code>: pseudo-atoms are included</li>
+<li><code>fr.pos()</code>, <code>fr.pos(gids)</code>, <code>fr.pos(gid)</code></li>
 <li><code>fr.time</code></li>
 <li><code>fr.box</code></li>
 </ul>
@@ -204,8 +205,8 @@ Typically, the output is a list of frame-wise results.</p>
 </ul>
 <p>Note that</p>
 <ul>
-<li>pseudo atoms do not have AID.</li>
-<li>sometimes <code>AID = GID + 1</code>, but it is not always the case</li>
+<li>Pseudo atoms do not have AID.</li>
+<li>If no pseudo atoms are present, then <code>AID = GID + 1</code>. In general, one cannot rely on this.</li>
 </ul>
 <p>To access a particle's coordinate in the trajectory (i.e., the <code>traj.Frame</code> object), you have to use GID.
 We have functions to map AID to GID in the <code>topo</code> module. For example,</p>

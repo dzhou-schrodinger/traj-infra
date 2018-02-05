@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="last update 12.22.2017">
+  <meta name="description" content="last update 02.06.2018">
   
   <link rel="shortcut icon" href="./img/favicon.ico">
   <title>Home - traj infra upgrade</title>
@@ -143,19 +143,22 @@
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">traj_util</span>
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">analysis</span>
 <span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">destro</span>
+<span class="n">schrodinger</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">desmond</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">staf</span>
 </pre></div>
 </p>
 <ul>
 <li>topo: <code>Cms</code> object manipulation, GID tracking/conversion</li>
 <li>traj and traj_util: definition of the new <code>Frame</code> object, trajectory read/write</li>
 <li>analysis: definition of various trajectory analyzers (see below)</li>
-<li>destro: the maeff class enables low-level mae file IO (try to avoid using it if you can)</li>
+<li>destro: the maeff class enables low-level mae file IO (try to avoid using it if you can, it bypasses all python-level and swig-level APIs)</li>
+<li>staf: abstract base classes for trajectory analyzers</li>
 </ul>
 <h2 id="analyzers-in-the-new-trajectory-infrastructure">analyzers in the new trajectory infrastructure</h2>
 <ul>
 <li>basic geometric operations<ul>
 <li><code>Angle</code></li>
 <li><code>Distance</code></li>
+<li><code>PlanarAngle</code></li>
 <li><code>Torsion</code></li>
 <li><code>Vector</code></li>
 </ul>
@@ -274,5 +277,5 @@
 
 <!--
 MkDocs version : 0.16.1
-Build Date UTC : 2017-12-22 22:43:04
+Build Date UTC : 2018-02-05 20:55:59
 -->
