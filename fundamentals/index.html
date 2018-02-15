@@ -159,18 +159,35 @@
 <li>If the data is DTR, you may be able to pull out more (private) information such as <code>fr._frame().temperature</code>. Use with your own risk.</li>
 </ul>
 <h2 id="minimum-examples">minimum examples</h2>
-<p>To read the CMS input file
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
+<p>The CMS files contain structures for MD related workflows.
+The first structure is the full system CT used for Maestro display.
+The rest are component CTs.</p>
+<p>There are three ways to read a CMS file</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.structure</span> <span class="kn">as</span> <span class="nn">structure</span>
+<span class="n">st_reader</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">StructureReader</span><span class="p">(</span><span class="s1">&#39;example-out.cms&#39;</span><span class="p">)</span>
+<span class="n">cts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">st_reader</span><span class="p">)</span>
+</pre></div>
 
+
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">schrodinger.application.desmond.cms</span> <span class="kn">import</span> <span class="n">Cms</span>
+<span class="n">cms_model</span> <span class="o">=</span> <span class="n">Cms</span><span class="p">(</span><span class="s1">&#39;example-out.cms&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
 <span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">cms_file_name</span><span class="p">)</span>
 </pre></div>
-</p>
+
+
+<p>The loading speed decreases for the latter methods. But more information become available in the latter methods as well.
+For trajectory analysis, the third method is the preferred one as often times an <code>msys_model</code> is needed for trajectory analysis.</p>
 <p>To read a trajectory
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>
 
 <span class="n">tr</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">read_traj</span><span class="p">(</span><span class="n">trajectory_directory</span><span class="p">)</span>
 </pre></div>
 </p>
+<p>Here <code>tr</code> is simply a python list of trajectory <code>Frame</code> objects.</p>
 <p>To do some analysis using existing analyzers</p>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">schrodinger.application.desmond.packages</span> <span class="kn">import</span> <span class="n">analysis</span><span class="p">,</span> <span class="n">traj</span><span class="p">,</span> <span class="n">topo</span>
 
