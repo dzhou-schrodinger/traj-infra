@@ -84,6 +84,9 @@
                 <li class="toctree-l3"><a href="#overview">overview</a></li>
                 
             
+                <li class="toctree-l3"><a href="#design">design</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#analyzer-prototypes">analyzer prototypes</a></li>
                 
             
@@ -137,7 +140,45 @@
             <div class="section">
               
                 <h2 id="overview">overview</h2>
-<p>The design is a combination of <strong>strategy pattern</strong> and <strong>template pattern</strong> centered around the following three classes</p>
+<p>This section is for developers who want to write customized trajectory analyzers.
+It can be skipped if you are satisfied as a user of the existing analyzers.</p>
+<p>The main reason for writing one's own analyzer is code decoupling.</p>
+<p>As an introductory example, let's filter the trajectory according to a user
+selected distance cutoff between two atoms.</p>
+<div class="highlight"><pre><span></span><span class="c1"># file loading is omitted </span>
+<span class="n">dist_ana</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">Distance</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">distances</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">dist_ana</span><span class="p">)</span>
+
+<span class="n">out_tr</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">fr</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mf">4.0</span><span class="p">:</span>  <span class="c1"># 4.0 is the chosen cutoff</span>
+        <span class="n">out_tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fr</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Spliter</span><span class="p">(</span><span class="n">staf</span><span class="o">.</span><span class="n">GeomAnalyzerBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gids</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">aids2gids</span><span class="p">([</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">],</span> <span class="n">include_pseudoatoms</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_precalc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">addDistance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">gids</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_postcalc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">pbc</span><span class="p">,</span> <span class="n">fr</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">getDistance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gids</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">gids</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">fr</span>
+</pre></div>
+
+
+<p>With this customized analyzer, </p>
+<div class="highlight"><pre><span></span><span class="c1"># file loading is omitted </span>
+<span class="n">spliter</span> <span class="o">=</span> <span class="n">Spliter</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">4.0</span><span class="p">)</span>
+<span class="n">out_tr</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">spliter</span><span class="p">)</span>
+</pre></div>
+
+
+<h2 id="design">design</h2>
+<p>The design of trajectory analysis framework is a combination of <strong>strategy pattern</strong> and <strong>template pattern</strong> centered around the following three classes</p>
 <ul>
 <li><code>class GeomCalc(object)</code></li>
 <li><code>class GeomAnalyzerBase(object)</code></li>
@@ -307,6 +348,7 @@ analysis, for example, performing statistics, etc.</p>
 
 
 <h3 id="using-the-dynamicaslanalyzer">Using the <code>DynamicAslAnalyzer</code></h3>
+<p>The </p>
               
             </div>
           </div>
