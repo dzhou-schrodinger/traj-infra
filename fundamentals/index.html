@@ -88,6 +88,13 @@
     </li>
 <li>
           
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../custom-analyzer/">Customized analyzers</a>
+        
+    </li>
+<li>
+          
         </ul>
       </div>
       &nbsp;
@@ -175,11 +182,11 @@ The rest are component CTs.</p>
 
 
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.topo</span> <span class="kn">as</span> <span class="nn">topo</span>
-<span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="n">cms_file_name</span><span class="p">)</span>
+<span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">read_cms</span><span class="p">(</span><span class="s1">&#39;example-out.cms&#39;</span><span class="p">)</span>
 </pre></div>
 
 
-<p>The loading speed decreases for the latter methods. But more information become available in the latter methods as well.
+<p>The loading speed decreases for the latter methods. But more information becomes available in the latter methods as well.
 For trajectory analysis, the third method is the preferred one as often times an <code>msys_model</code> is needed for trajectory analysis.</p>
 <p>To read a trajectory
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schrodinger.application.desmond.packages.traj</span> <span class="kn">as</span> <span class="nn">traj</span>

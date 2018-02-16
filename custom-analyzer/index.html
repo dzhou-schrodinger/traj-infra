@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Customized analyzers - traj infra upgrade</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Customized analyzers";
+    var mkdocs_page_input_path = "custom-analyzer.md";
+    var mkdocs_page_url = "/custom-analyzer/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> traj infra upgrade</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../fundamentals/">Fundamentals</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../paradigms/">Paradigms</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../correspondence/">Correspondence</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Customized analyzers</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#overview">overview</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#analyzer-prototypes">analyzer prototypes</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#reduce-mechanism">reduce mechanism</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#more-advanced-topics">more advanced topics</a></li>
+                
+                    <li><a class="toctree-l4" href="#a-tale-of-three-ids">a tale of three IDs</a></li>
+                
+                    <li><a class="toctree-l4" href="#positer-mechanism">positer mechanism</a></li>
+                
+                    <li><a class="toctree-l4" href="#using-the-dynamicaslanalyzer">Using the DynamicAslAnalyzer</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">traj infra upgrade</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Customized analyzers</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="overview">overview</h2>
+<p>The design is a combination of <strong>strategy pattern</strong> and <strong>template pattern</strong> centered around the following three classes</p>
+<ul>
+<li><code>class GeomCalc(object)</code></li>
+<li><code>class GeomAnalyzerBase(object)</code></li>
+<li><code>class _CustomCalc(OrderedDict)</code></li>
+</ul>
+<p><code>_CustomCalc</code> is a dictionary (specifically <code>collections::OrderedDict</code>) that caches all the elementary calculations for the analyzers.
+Typically its keys are function calls and the values are dictionaries whose key value pairs correspond to function call inputs (e.g., <code>gids</code>) and outputs.
+Its member function <code>_CustomCalc.calc(pbc, fr)</code> carries out all cached calculations for each frame.</p>
+<p><code>GeomCalc</code> is a callable that contains a <code>_CustomCalc</code> instance for calculations.
+It supports four basic geometric calculations which only require <code>gids</code> as inputs</p>
+<ul>
+<li>vector</li>
+<li>distance</li>
+<li>angle</li>
+<li>torsion</li>
+</ul>
+<p>These calculations take care of the unwrapping of the periodic boundary condition.
+There are also four analyzer classes to provide direct access to these calculations.</p>
+<p><code>GeomAnalyzerBase</code> is the abstract base class for all trajectory analyzer class.
+It is a callable that returns the calculation result.</p>
+<p>All other analyzers are registered to the <code>GeomCalc</code> instance using <code>GeomCalc.addAnalyzer(analyzer)</code>.
+In <code>GeomAnalyzerBase._precalc(calc)</code>, one should use <code>GeomCalc.addCustom(cid, key, default)</code> to register the elementary calculation.
+In <code>GeomAnalyzerBase._postcalc(calc, pbc, fr)</code>, one should retrieve the results of the elementary calculation and perform further calculations if needed.</p>
+<p>At high level, the analysis process can be summarized by the following pseudo-code</p>
+<div class="highlight"><pre><span></span><span class="n">calc</span> <span class="o">=</span> <span class="n">GeomCalc</span><span class="p">()</span>
+
+<span class="c1"># each analyzer is an instance of a derived class of GeomAnalyzerBase</span>
+<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+    <span class="c1"># inside these _precalc() functions, elementary calculations are registered to</span>
+    <span class="c1"># calc._custom which is a _CustomCalc object</span>
+    <span class="c1"># these results are cached and shared among analyzers</span>
+    <span class="n">ana</span><span class="o">.</span><span class="n">_precalc</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
+    <span class="c1"># registered elementary calculations are performed by this call</span>
+    <span class="n">calc</span><span class="p">()</span>
+    <span class="c1"># further analyzer specific calculations</span>
+    <span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+        <span class="n">ana</span><span class="o">.</span><span class="n">_postcalc</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span>
+
+<span class="c1"># this reduce process does not exist for all analyzers</span>
+<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+    <span class="n">ana</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+
+
+<h2 id="analyzer-prototypes">analyzer prototypes</h2>
+<p>There are four analyzer prototypes</p>
+<ul>
+<li><code>class GeomAnalyzerBase(object)</code></li>
+<li><code>class _MaestroAnalysis(GeomAnalyzerBase)</code></li>
+<li><code>class _CompositeAnalyzer(GeomAnalyzerBase)</code></li>
+<li><code>class CustomMaestroAnalysis(CustomMaestroAnalysis)</code></li>
+<li><code>class _DynamicAslAnalyzer(GeomAnalyzerBase)</code></li>
+</ul>
+<p>Here <code>GeomAnalyzerBase</code> is an <strong>abstract base class</strong>. Here is an example that
+implement analyzer .</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooAnalyzer</span><span class="p">(</span><span class="n">GeomAnalyzerBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="n">lig_asl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @type msys_model: C{msys.System}</span>
+<span class="sd">        @type  cms_model: C{schrodinger.structure.Structure}</span>
+<span class="sd">        @type    lig_asl: C{str}</span>
+<span class="sd">        @param   lig_asl: ASL expression to select ligand atoms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lig_aids</span> <span class="o">=</span> <span class="n">cms_model</span><span class="o">.</span><span class="n">select_atom</span><span class="p">(</span><span class="n">lig_asl</span><span class="p">)</span>
+        <span class="n">lig_gids</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">aids2gids</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">lig_aids</span><span class="p">,</span> <span class="n">include_pseudoatoms</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_precalc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @type calc: L{GeomCalc}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># to do some real work, use calc.addCustom() to register function calls</span>
+        <span class="k">pass</span>
+
+
+    <span class="k">def</span> <span class="nf">_postcalc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">pbc</span><span class="p">,</span> <span class="n">fr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @type calc: L{GeomCalc}</span>
+<span class="sd">        @type  pbc: L{Pbc}</span>
+<span class="sd">        @type   fr: L{traj.Frame}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># fr is the current frame </span>
+        <span class="c1"># one could use calc.getCustom() to retrieve intermediate calculation results</span>
+        <span class="k">pass</span>
+</pre></div>
+
+
+<p>The intention of <code>_MaestroAnalysis</code> is to provide intermediate data (a frame and a full-system CT) with all the solute atoms centered.</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooMaestroAnalyzer</span><span class="p">(</span><span class="n">_MaestroAnalysis</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="n">lig_asl</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @type msys_model: C{msys.System}</span>
+<span class="sd">        @type  cms_model: C{schrodinger.structure.Structure}</span>
+<span class="sd">        @type    lig_asl: C{str}</span>
+<span class="sd">        @param   lig_asl: ASL expression to select ligand atoms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_MaestroAnalysis</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">)</span>
+        <span class="n">lig_aids</span> <span class="o">=</span> <span class="n">cms_model</span><span class="o">.</span><span class="n">select_atom</span><span class="p">(</span><span class="n">lig_asl</span><span class="p">)</span>
+        <span class="n">lig_gids</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">aids2gids</span><span class="p">(</span><span class="n">cms_model</span><span class="p">,</span> <span class="n">lig_aids</span><span class="p">,</span> <span class="n">include_pseudoatoms</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_precalc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @type calc: L{GeomCalc}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># to do some work beyond getting centered data,</span>
+        <span class="c1"># use calc.addCustom() to register function calls</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_postcalc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">pbc</span><span class="p">,</span> <span class="n">fr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @type calc: L{GeomCalc}</span>
+<span class="sd">        @type  pbc: L{Pbc}</span>
+<span class="sd">        @type   fr: L{traj.Frame}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># fr is the current frame </span>
+        <span class="c1"># one could use calc.getCustom() to retrieve intermediate calculation results</span>
+        <span class="n">centered_fr</span><span class="p">,</span> <span class="n">centered_cms_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getCentered</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
+        <span class="k">pass</span>
+</pre></div>
+
+
+<p>The intention of <code>_CompositeAnalyzer</code> is to simplify the implementation when one analyzer needs other analyzers as its helpers, i.e., the <strong>composition pattern</strong>.</p>
+<h2 id="reduce-mechanism">reduce mechanism</h2>
+<p>The design of the trajectory analysis classes aims to share auxiliary
+calculation results between analyzers for each frame. 
+However, no information is shared between frames.
+The reduce mechanism uses the results from all frames as input for trajectory-wise
+analysis, for example, performing statistics, etc.</p>
+<h2 id="more-advanced-topics">more advanced topics</h2>
+<h3 id="a-tale-of-three-ids">a tale of three IDs</h3>
+<p>There are three types of IDs in use</p>
+<ul>
+<li>AID: index used by the maestro which starts from 1<ul>
+<li>cms_model</li>
+<li>ct</li>
+</ul>
+</li>
+<li>GID: index used by the msys_model which starts from 0<ul>
+<li>msys_model</li>
+<li>frame objects</li>
+</ul>
+</li>
+<li>XID<ul>
+<li>frame objects</li>
+</ul>
+</li>
+</ul>
+<h3 id="positer-mechanism">positer mechanism</h3>
+<p>The positer mechanism enables uniform treatment of </p>
+<ul>
+<li>atom</li>
+<li>centroid of a group of atoms</li>
+<li>center of mass of a group of atoms</li>
+<li>center of charge of a group of atoms</li>
+</ul>
+<p>It has <strong>side effect</strong>: extra <code>gids</code> will be created in the frame object.</p>
+<p><code>class Positer(object)</code></p>
+<p>Each class instance works with two  <code>GeomCalc</code> objects</p>
+<ul>
+<li>an internal <code>GeomCalc</code> object that computes the results of the <code>CenterOf</code> analyzers</li>
+<li>an external <code>GeomCalc</code> object that keeps track of the index of the extra <code>gids</code></li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">positer</span> <span class="o">=</span> <span class="n">Positer</span><span class="p">(,</span> <span class="p">)</span>
+<span class="n">ext_calc</span><span class="o">.</span><span class="n">addPosition</span><span class="p">(</span><span class="n">positer</span><span class="p">,</span> <span class="n">num_pos</span><span class="p">)</span>
+</pre></div>
+
+
+<h3 id="using-the-dynamicaslanalyzer">Using the <code>DynamicAslAnalyzer</code></h3>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../correspondence/" class="btn btn-neutral" title="Correspondence"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../correspondence/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>
