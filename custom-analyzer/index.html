@@ -143,10 +143,10 @@
 <p>This section is for developers who want to write customized trajectory analyzers.
 It can be skipped if you are satisfied as a user of the existing analyzers.</p>
 <p>The main reason for writing one's own analyzer is code decoupling.</p>
-<p>As an introductory example, let's filter the trajectory according to a user
+<p>As an introductory example, let's filter a trajectory according to a user
 selected distance cutoff between two atoms.</p>
 <div class="highlight"><pre><span></span><span class="c1"># file loading is omitted </span>
-<span class="n">dist_ana</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">Distance</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">dist_ana</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">Distance</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>  <span class="c1"># atom 1 and 50 are chosen</span>
 <span class="n">distances</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">dist_ana</span><span class="p">)</span>
 
 <span class="n">out_tr</span> <span class="o">=</span> <span class="p">[]</span>
@@ -156,6 +156,7 @@ selected distance cutoff between two atoms.</p>
 </pre></div>
 
 
+<p>The following class is an example of customized analyzer for the same task,</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Spliter</span><span class="p">(</span><span class="n">staf</span><span class="o">.</span><span class="n">GeomAnalyzerBase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gids</span> <span class="o">=</span> <span class="n">topo</span><span class="o">.</span><span class="n">aids2gids</span><span class="p">([</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">],</span> <span class="n">include_pseudoatoms</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -170,7 +171,7 @@ selected distance cutoff between two atoms.</p>
 </pre></div>
 
 
-<p>With this customized analyzer, </p>
+<p>With this customized analyzer, the usage code becomes</p>
 <div class="highlight"><pre><span></span><span class="c1"># file loading is omitted </span>
 <span class="n">spliter</span> <span class="o">=</span> <span class="n">Spliter</span><span class="p">(</span><span class="n">msys_model</span><span class="p">,</span> <span class="n">cms_model</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">4.0</span><span class="p">)</span>
 <span class="n">out_tr</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">spliter</span><span class="p">)</span>
@@ -178,6 +179,29 @@ selected distance cutoff between two atoms.</p>
 
 
 <h2 id="design">design</h2>
+<p>At high level, the trajectory analysis process can be summarized by the following pseudo-code</p>
+<div class="highlight"><pre><span></span><span class="n">calc</span> <span class="o">=</span> <span class="n">GeomCalc</span><span class="p">()</span>
+
+<span class="c1"># each analyzer is an instance of a derived class of GeomAnalyzerBase</span>
+<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+    <span class="c1"># inside these _precalc() functions, elementary calculations are registered to</span>
+    <span class="c1"># calc._custom which is a _CustomCalc object</span>
+    <span class="c1"># these results are cached and shared among analyzers</span>
+    <span class="n">ana</span><span class="o">.</span><span class="n">_precalc</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
+    <span class="c1"># registered elementary calculations are performed by this call</span>
+    <span class="n">calc</span><span class="p">()</span>
+    <span class="c1"># further analyzer specific calculations</span>
+    <span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+        <span class="n">ana</span><span class="o">.</span><span class="n">_postcalc</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span>
+
+<span class="c1"># this reduce process does not exist for all analyzers</span>
+<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+    <span class="n">ana</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
+</pre></div>
+
+
 <p>The design of trajectory analysis framework is a combination of <strong>strategy pattern</strong> and <strong>template pattern</strong> centered around the following three classes</p>
 <ul>
 <li><code>class GeomCalc(object)</code></li>
@@ -202,29 +226,6 @@ It is a callable that returns the calculation result.</p>
 <p>All other analyzers are registered to the <code>GeomCalc</code> instance using <code>GeomCalc.addAnalyzer(analyzer)</code>.
 In <code>GeomAnalyzerBase._precalc(calc)</code>, one should use <code>GeomCalc.addCustom(cid, key, default)</code> to register the elementary calculation.
 In <code>GeomAnalyzerBase._postcalc(calc, pbc, fr)</code>, one should retrieve the results of the elementary calculation and perform further calculations if needed.</p>
-<p>At high level, the analysis process can be summarized by the following pseudo-code</p>
-<div class="highlight"><pre><span></span><span class="n">calc</span> <span class="o">=</span> <span class="n">GeomCalc</span><span class="p">()</span>
-
-<span class="c1"># each analyzer is an instance of a derived class of GeomAnalyzerBase</span>
-<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
-    <span class="c1"># inside these _precalc() functions, elementary calculations are registered to</span>
-    <span class="c1"># calc._custom which is a _CustomCalc object</span>
-    <span class="c1"># these results are cached and shared among analyzers</span>
-    <span class="n">ana</span><span class="o">.</span><span class="n">_precalc</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
-    <span class="c1"># registered elementary calculations are performed by this call</span>
-    <span class="n">calc</span><span class="p">()</span>
-    <span class="c1"># further analyzer specific calculations</span>
-    <span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
-        <span class="n">ana</span><span class="o">.</span><span class="n">_postcalc</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span>
-
-<span class="c1"># this reduce process does not exist for all analyzers</span>
-<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
-    <span class="n">ana</span><span class="o">.</span><span class="n">reduce</span><span class="p">()</span>
-</pre></div>
-
-
 <h2 id="analyzer-prototypes">analyzer prototypes</h2>
 <p>There are four analyzer prototypes</p>
 <ul>
