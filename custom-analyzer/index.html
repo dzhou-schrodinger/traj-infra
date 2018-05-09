@@ -142,7 +142,7 @@
                 <h2 id="overview">overview</h2>
 <p>This section is for developers who want to write customized trajectory analyzers.
 It can be skipped if you are satisfied as a user of the existing analyzers.</p>
-<p>The main reason for writing one's own analyzer is code decoupling.</p>
+<p>The main reason to write customized analyzer is code decoupling.</p>
 <p>As an introductory example, let's filter a trajectory according to a user
 selected distance cutoff between two atoms.</p>
 <div class="highlight"><pre><span></span><span class="c1"># file loading is omitted </span>
@@ -179,20 +179,23 @@ selected distance cutoff between two atoms.</p>
 
 
 <h2 id="design">design</h2>
-<p>At high level, the trajectory analysis process can be summarized by the following pseudo-code</p>
+<p>At high level, the trajectory analysis process is as follows.</p>
 <div class="highlight"><pre><span></span><span class="n">calc</span> <span class="o">=</span> <span class="n">GeomCalc</span><span class="p">()</span>
 
 <span class="c1"># each analyzer is an instance of a derived class of GeomAnalyzerBase</span>
-<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
+<span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>  <span class="c1"># both static and dynamic analyzers</span>
     <span class="c1"># inside these _precalc() functions, elementary calculations are registered to</span>
     <span class="c1"># calc._custom which is a _CustomCalc object</span>
     <span class="c1"># these results are cached and shared among analyzers</span>
     <span class="n">ana</span><span class="o">.</span><span class="n">_precalc</span><span class="p">(</span><span class="n">calc</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">tr</span><span class="p">:</span>
-    <span class="c1"># registered elementary calculations are performed by this call</span>
-    <span class="n">calc</span><span class="p">()</span>
-    <span class="c1"># further analyzer specific calculations</span>
+    <span class="c1"># perform per-frame initialization for dynamic analyzers</span>
+    <span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">dynamic_analyzers</span><span class="p">:</span>
+        <span class="n">ana</span><span class="o">.</span><span class="n">_dyncalc</span><span class="p">(</span><span class="n">fr</span><span class="p">)</span>
+    <span class="c1"># perform registered elementary calculations</span>
+    <span class="n">calc</span><span class="p">(</span><span class="n">fr</span><span class="p">)</span>
+    <span class="c1"># perform further analyzer specific calculations</span>
     <span class="k">for</span> <span class="n">ana</span> <span class="ow">in</span> <span class="n">analyzers</span><span class="p">:</span>
         <span class="n">ana</span><span class="o">.</span><span class="n">_postcalc</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">fr</span><span class="p">)</span>
 
